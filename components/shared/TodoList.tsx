@@ -8,38 +8,8 @@ export interface Todo {
 }
 interface TodoListParams {
     todos: Todo[]
-    setTodos: any
-    user_id: string
 }
-const TodoList = ({ todos, setTodos, user_id }: TodoListParams) => {
-    const { session } = useSession();
-    const [loading, setLoading] = useState(true);
-
-    // on first load, fetch and set todos
-    useEffect(() => {
-        const loadTodos = async () => {
-            try {
-                setLoading(true);
-                const supabaseAccessToken = await session?.getToken({
-                    template: "supabase",
-                });
-                const supabase = await supabaseClient(supabaseAccessToken || "");
-                const { data: todos } = await supabase.from("todos").select("*").eq("user_id", user_id);
-                setTodos(todos);
-            } catch (e) {
-                alert(e);
-            } finally {
-                setLoading(false);
-            }
-        };
-        loadTodos();
-    }, []);
-
-    // if loading, just show basic message
-    if (loading) {
-        return <div className='py-[1rem] px-[2rem] flex flex-col items-center'>Loading...</div>;
-    }
-
+const TodoList = ({ todos }: TodoListParams) => {
     // display all the todos
     return (
         <>
